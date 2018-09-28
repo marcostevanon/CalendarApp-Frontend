@@ -52,29 +52,177 @@
         </nav>
     </header>
 
-    <!--
-    <header>
-        <nav class="navbar stiky-top navbar-expand-lg navbar-dark bg-dark">
-            
-            <a class="navbar-brand" href="../">
-                <img src="res/ITS_Logo30.png" width="30" height="30" class="d-inline-block align-top" alt="">&nbsp;ITS
-                Calendar Web</a>
-            
-            <button id="btn-expand" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">Corsi&nbsp;&nbsp;<span
-                    class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <div class="spacer"></div>
-                <ul class="navbar-nav">
-                    
-                    <div id="course-list"></div>
-                    DIVISIONE PRIMO E SECONDO ANNO
-                </ul>
+    <section id="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-1 col-md-2 col-lg-3"></div>
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                    <h5 class="course-title">Times for <b id="course-title"></b></h5>
+                    <div class="last-update"><em>Last update: <b id="last-update"></b></em>
+                        <div id="last-update-time" class="hour"></div>
+                    </div>
+                    <div class="card table-list">
+                        <ul class="list-group list-group-flush">
+                            <li class="week-divider week-current">lun 24 set - ven 28 set
+                                <!--<span class="span-week-current">&nbsp;&nbsp;<sup>(corrente)</sup></span>-->
+                            </li>
+                            <li id="1" class="list-group-item data old">
+                                <table class="full-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="title"><b>COMPETENZE DI BASE E TRASVERSALI</b>
+                                                    <div class="prof"><em>Libralato, Moro, Trotta</em></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pc50sx">
+                                                <div class="date">lun 24 set '18&nbsp;&nbsp;<div class="time AM">9:30 -
+                                                        11:30</div>
+                                                </div>
+                                            </td>
+                                            <td class="pc50dx">
+                                                <div class="room">Aula S4<div class="room-divider">&nbsp;-&nbsp;</div>
+                                                    <div class="building S">Edf. S</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li id="2" class="list-group-item data old">
+                                <table class="full-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="title"><b>IMPRESE E REALTÃ&nbsp; DEL TERRITORIIO</b>
+                                                    <div class="prof"><em>Libralato, Moro, Trotta</em></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pc50sx">
+                                                <div class="date">lun 24 set '18&nbsp;&nbsp;<div class="time PM">13 -
+                                                        14</div>
+                                                </div>
+                                            </td>
+                                            <td class="pc50dx">
+                                                <div class="room">Aula S4<div class="room-divider">&nbsp;-&nbsp;</div>
+                                                    <div class="building S">Edf. S</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li id="3" class="list-group-item data old">
+                                <table class="full-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="title"><b>SVILUPPO MOBILE IN IOS</b>
+                                                    <div class="prof"><em>Andrea Dottor</em></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pc50sx">
+                                                <div class="date">mar 25 set '18&nbsp;&nbsp;<div class="time AM">9 - 13</div>
+                                                </div>
+                                            </td>
+                                            <td class="pc50dx">
+                                                <div class="room">Informatica (L10)<div class="room-divider">&nbsp;-&nbsp;</div>
+                                                    <div class="building S">Edf. S</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li id="4" class="list-group-item data old">
+                                <table class="full-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="title"><b>GESTIONE PROGETTUALE</b>
+                                                    <div class="prof"><em>Stefano Valle</em></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pc50sx">
+                                                <div class="date">gio 27 set '18&nbsp;&nbsp;<div class="time PM">14 -
+                                                        18</div>
+                                                </div>
+                                            </td>
+                                            <td class="pc50dx">
+                                                <div class="room">Lab. ITS (L3)<div class="room-divider">&nbsp;-&nbsp;</div>
+                                                    <div class="building B">Edf. B</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li id="5" class="list-group-item data old">
+                                <table class="full-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="title"><b>SVILUPPO MOBILE IN ANDROID E CROSS PLATFORM</b>
+                                                    <div class="prof"><em>Andrea Dottor</em></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pc50sx">
+                                                <div class="date">ven 28 set '18&nbsp;&nbsp;<div class="time AM">9 - 13</div>
+                                                </div>
+                                            </td>
+                                            <td class="pc50dx">
+                                                <div class="room">Lab. ITS (L3)<div class="room-divider">&nbsp;-&nbsp;</div>
+                                                    <div class="building B">Edf. B</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li id="6" class="list-group-item data blink-bg">
+                                <table class="full-table">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="title"><b>INGLESE TECNICO</b>
+                                                    <div class="prof"><em>Liana Battello</em></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pc50sx">
+                                                <div class="date">ven 28 set '18&nbsp;&nbsp;<div class="time PM">14 -
+                                                        17</div>
+                                                </div>
+                                            </td>
+                                            <td class="pc50dx">
+                                                <div class="room">Informatica (L1)<div class="room-divider">&nbsp;-&nbsp;</div>
+                                                    <div class="building B">Edf. B</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </nav>
-    </header>
--->
+        </div>
+    </section>
+
+
+    <!--
     <div class="container">
         <div class="row">
             <div class="col-sm-1 col-md-2 col-lg-3"></div>
@@ -129,7 +277,7 @@
         </div>
     </div>
     </div>
-
+-->
 
     <footer class="container">
         <div class="row">
@@ -154,6 +302,8 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
+    <script src="js/moment/moment.js"></script>
+    <!--<script src="js/moment/locale/it.js" charset="UTF-8"></script>-->
     <script src="js/index.js"></script>
 </body>
 

@@ -1,24 +1,17 @@
 let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
-let base_url = 'http://localhost:3000/';
+let base_url = 'http://192.168.1.109:3000/';
 var requests = []
 
 /*
 1 -->   get all course to show list of courses
-        <div id="course-list"></div>
-
 2 -->   get detail of the chosen course
-
 3 -->   get last update
-        <div class="last-update"></div>
-
-4 -->   get all times for the chosen course
-*/
+4 -->   get all times for the chosen course*/
 
 async function load() {
     var courseList = await fetch(`${base_url}course/list`).then(res => res.json());
-    console.log(courseList);
-    
+
     //List creation
     courseList.forEach(item => {
         $('#course-list').append(`<li class="nav-item">
@@ -35,9 +28,16 @@ async function load() {
         var times = await fetch(`${base_url}times/${query}?date=2018-09-20`).then(res => res.json());
 
         $('#title').text(`${courseCurrent.type} - ${courseCurrent.name}`);
+        $('#course-title').text(`${courseCurrent.type} - ${courseCurrent.name}`);
+        $('#last-update').text(moment(lastUpdate).subtract(2, 'hours').toNow(true) + ' ago');
+        var lastUp = moment(moment(lastUpdate).diff(moment())).format("HH:mm:ss")
+        console.log(moment.duration(lastUp));
+        $('#last-update-time').text(
+            moment(lastUpdate).subtract(2, 'hours') < 12 ? 
+            moment(lastUpdate).subtract(2, 'hours').format('HH:mm') : '');
 
-
-
+        $('#loading').hide()
+    }else{
         $('#loading').hide()
     }
 }
