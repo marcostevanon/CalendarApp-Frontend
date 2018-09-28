@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9, user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--#343a40 #333333-->
+    <meta name="theme-color" content="#444444" />
+    <meta name="author" content="Marco Stevanon, marco.stevanon@gmail.com" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="icon" href="res/ITS_Logo30.png" />
+
+    <title>ITS Calendar</title>
+</head>
+
+<body>
+    <div id="loading">
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+            <h5 class="text-center">Loading</h5>
+            <h5 id="error" class="text-center" hidden>Errore, riprova più tardi</h5>
+        </div>
+    </div>
+
+    <header>
+        <nav class="navbar stiky-top navbar-expand-lg navbar-dark bg-dark">
+            <!--Logo-->
+            <a class="navbar-brand" href="../">
+                <img src="res/ITS_Logo30.png" width="30" height="30" class="d-inline-block align-top" alt="">&nbsp;ITS
+                Calendar Web</a>
+            <!--Mobile Toggle Button-->
+            <button id="btn-expand" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">Corsi&nbsp;&nbsp;<span
+                    class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="spacer"></div>
+                <ul class="navbar-nav">
+                    <!--Visualizzazione Corsi-->
+                    <div id="course-list"></div>
+                    DIVISIONE PRIMO E SECONDO ANNO
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-1 col-md-2 col-lg-3"></div>
+            <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                <h5 class="course-title text-center">
+                    Times for <b class="course-name"></b>
+                </h5>
+                <div class="last-update"></div>
+                <div class="card table-list">
+                    <ul class="list-group list-group-flush">
+                        <li class="week-divider"></li>
+                        <li id="' . $cont_lesson . '" class="list-group-item' . $data_type . '">
+                            <table class="full-table">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="title"><b>
+                                                    $lezione->getTitle()</b>
+                                                <div class="prof"><em>$lezione->getProfessor()
+                                                    </em></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pc50sx">
+                                            <div class="date">
+                                                substr($data[0], 0, 3) . ' ' . $data[1] . ' ' . substr($data[2], 0, 3)
+                                                . ' \'' . substr($data[3], 2, 4)
+                                                &nbsp;&nbsp;<div class="time ' . $period . '">'
+                                                    $lezione->getTime()[0]
+                                                    $lezione->getTime()[1]
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="pc50dx">
+                                            <div class="room">';
+                                                $lezione->getRoom()
+                                                <div class="room-divider">&nbsp;-&nbsp;</div>
+                                                <div class="building">
+                                                    $lezione->getBuilding() Edf.
+                                                    $lezione->getBuilding()
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <footer class="container">
+        <div class="row">
+            <div class="col-sm-1 col-md-2 col-lg-3"></div>
+            <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                <hr>
+                <div align="center" class="footer-warning">
+                    ITS Calendar Web non è un portale ufficiale, i dati utilizzati provengono direttamente da
+                    <a href="http://www.unipordenone.it/mrbs/day.php" target="_blank">www.unipordenone.it</a>
+                    e non sono soggetti a controlli.
+                    <div class="footer-copy">
+                        <span class="text-muted">Marco Stevanon &copy;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--TODO COMPARE MODAL-->
+<div id="compare_modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="col-auto my-1">
+                <div class="custom-control custom-checkbox mr-sm-2">
+                    <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
+                    <label class="custom-control-label" for="customControlAutosizing">Remember my preference</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" onclick="compare(); $('#compare_modal').modal('hide'); load();">Confronta
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+            </div>
+        </div>
+    </div>
+</div>
