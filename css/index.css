@@ -36,8 +36,13 @@
 }
 
 .spacer {
-    margin-top: 20px;
-    margin-left: 20px;
+    margin-top: 15px;
+    margin-left: 15px;
+}
+
+.my-btn{
+    height: 27px;
+    padding-top: 2px
 }
 
 @media (max-width: 576px) {
@@ -61,6 +66,7 @@
 
 #section {
     top: 0;
+    margin-top: 50px;
     width: 100%;
     position: relative;
     text-align: center;
@@ -199,6 +205,7 @@
 
 .title-left {
     float: left;
+    text-align: left;
 }
 
 .span-week-current {

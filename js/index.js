@@ -1,6 +1,6 @@
 let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
-let base_url = 'http://192.168.1.109:1883/';
+let base_url = 'http://93.46.119.114:1883/';
 var requests = []
 
 /*
@@ -9,18 +9,37 @@ var requests = []
 3 -->   get last update
 4 -->   get all times for the chosen course*/
 
+
+
 async function load() {
-    var courseList = await fetch(`${base_url}course/list`).then(res => res.json());
+    try {
+        var courseList = await fetch(`${base_url}course/list`).then(res => res.json());
+    } catch (err) {
+        $('#body').hide();
+        $('.error').show();
+    }
 
     //List creation
+    var group = 1;
     courseList.forEach(item => {
-        $('#course-list').append(`<li class="nav-item">
-            <a class="nav-link" href="?q=${item.csvCode}">
-                <button class="btn btn-sm btn-block 
-                    ${item.csvCode === query ? 'btn-light' : 'btn-outline-light'} 
-                    btn-bold" type="button">${item.name}</button>
-            </a></li>`);
+        if (item.year !== group) {
+            group = item.year;
+            $('#course-list').append(`<div style="color: white" class="spacer"></div>`);
+        }
+
+        $('#course-list').append(`
+            <li class="nav-item">
+                <div class="nav-link">
+                    <span ${!item.active ? 'tabindex="0" data-toggle="tooltip" data-placement="bottom" title="Nessun dato disponibile"' : ''}>
+                        <button class="btn btn-sm btn-block ${item.csvCode === query ? 'btn-light' : 'btn-outline-light'} btn-bold my-btn"
+                            type="button" ${!item.active ? 'disabled style="pointer-events: none;"' : ''}
+                            onclick="window.location = '?q=${item.csvCode}'">${item.name}
+                        </button>
+                    </span>
+                </div>
+            </li>`);
     });
+    $('#course-list').append(`<div style="color: white" class="spacer"></div>`);
 
     if (query) {
         $('#info-visualizer').hide();
@@ -31,7 +50,7 @@ async function load() {
 
         $('#title').text(`${courseCurrent.type} - ${courseCurrent.name}`);
         $('#course-title').text(`${courseCurrent.type} - ${courseCurrent.name}`);
-        $('#last-update').text(moment(lastUpdate).subtract(2, 'hours').toNow(true) + ' ago');
+        $('#last-update').text(moment(lastUpdate).subtract(2, 'hours').toNow(true) + ' fa');
 
         //Notificarion
         //$('#times-list').append(`<li class="list-group-item data" style="background-color: #88e66f"><a href="#"><b>Abilita Notifiche!</b></a></li>`);
@@ -53,15 +72,14 @@ async function load() {
 
             var hours = { start: timeItem.timestart.split(':'), end: timeItem.timeend.split(':') }
 
+            var attributes = moment(timeItem.date).isBefore(moment()) ? 'old' : '';
+            attributes += ' ' + odd % 2 == 0 ? 'dark' : '';
+            attributes += ' ' + moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBetween(moment().startOf('day'), moment().endOf('day')) ? 'data-current' : '';
+            attributes += ' ' + moment().isBetween(
+                moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timestart, 'DDMMYYYYHH:mm:ss'),
+                moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'blink-bg' : '';
             var single_item = `<li id="${times[0].webID}"
-                class="list-group-item data 
-                    ${moment(timeItem.date).isBefore(moment()) ? 'old' : ''} 
-                    ${odd % 2 == 0 ? 'dark' : ''}
-                    ${moment(timeItem.date).startOf('day').isSame(moment().startOf('day')) ? 'data-current' : ''} 
-                    ${moment().isBetween(
-                    moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timestart, 'DDMMYYYYHH:mm:ss'),
-                    moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss'))
-                    ? 'blink-bg' : ''}">
+                class="list-group-item data ${attributes}">
                 <table class="full-table">
                     <tbody><tr>
                         <td colspan="2">
@@ -78,23 +96,29 @@ async function load() {
                     <td class="pc50dx">`;
             if (timeItem.room) {
                 single_item += `<div class="room">${timeItem.room}<div class="room-divider">&nbsp;-&nbsp;</div>
-                                    <div class="building S">Bld. ${timeItem.building}</div>
+                                    <div class="building ${timeItem.building === 'B' ? 'B' : 'S'}">Edf. ${timeItem.building}</div>
                                 </div>`
-            } else { single_item += `<div class="room">Location N.A.</div>` }
+            } else { single_item += `<div class="room" data-toggle="tooltip" data-placement="right" title="Posizione non disponibile">N.D.</div>` }
             single_item += `</td></tr></tbody></table></li>`;
 
             $('#times-list').append(single_item);
-
         });
-
+        
+        //$('#times-list').append(`<li class="list-group-item data" style="background-color: #88e66f"><a href="#"><b>Statistiche</b></a></li>`);
 
         $('#loading').hide();
+        $('.error').hide();
     } else {
+        $('.error').hide();
         $('#loading').hide();
-        $('#footer').hide();
         $('#time-visualizer').hide();
+        $('#btn-expand').hide();
+        $('#course-list').hide();
+        $('#footer').hide();
+
 
     }
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
 load();
