@@ -50,7 +50,7 @@ async function load() {
         });
 
         if (!query_check) {
-            internal_error('selected course does not exist');
+            internal_error('course does not exist');
             return;
         }
 
