@@ -79,6 +79,7 @@ async function load() {
 
             var odd = 0;
             var current_week_start = null;
+            var current_day_of_week = null;
 
             times.forEach(timeItem => {
                 odd++;
@@ -93,17 +94,14 @@ async function load() {
                     ${moment(current_week_start).format('ddd D MMM').toLowerCase()} - ${moment(current_week_end).format('ddd D MMM').toLowerCase()}</li>`);
                 }
 
-                var current_day_of_week = 0;
-
-                /*if (timeItem.date !== current_day_of_week) {
-                    //odd++;
+                if (current_day_of_week !== timeItem.date) {
                     current_day_of_week = timeItem.date;
-                    $('#times-list').append(`<li class="day-divider text-left">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
-                }*/
+                    $('#times-list').append(`<li class="day-divider dark text-left">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
+                }
 
                 var hours = { start: timeItem.timestart.split(':'), end: timeItem.timeend.split(':') }
 
-                var attributes = (odd % 2 == 0 ? 'dark' : '');
+                var attributes = '';//(odd % 2 == 0 ? 'dark' : '');
                 attributes += ' ' + (moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old' : '');
                 attributes += ' ' + (moment(now).isBetween(
                     moment(timeItem.date).startOf('day'),

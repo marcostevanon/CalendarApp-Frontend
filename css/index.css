@@ -218,6 +218,16 @@
 
 /*List Element Type*/
 
+.day-divider {
+    width: 100%;    
+    padding: 4px;
+    padding-bottom: 0;
+    padding-top: 8px;
+    list-style-type: none;
+    font-size: small;
+    text-align: center;
+}
+
 .table-list {
     /*font-size: medium;*/
     margin-left: 2px;
