@@ -96,7 +96,7 @@ async function load() {
 
                 if (current_day_of_week !== timeItem.date) {
                     current_day_of_week = timeItem.date;
-                    $('#times-list').append(`<li class="day-divider dark text-left">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
+                    $('#times-list').append(`<li class="day-divider dark text-center">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
                 }
 
                 var hours = { start: timeItem.timestart.split(':'), end: timeItem.timeend.split(':') }

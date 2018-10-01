@@ -222,7 +222,7 @@
     width: 100%;    
     padding: 4px;
     padding-bottom: 0;
-    padding-top: 8px;
+    padding-top: 7px;
     list-style-type: none;
     font-size: small;
     text-align: center;
@@ -247,6 +247,7 @@
 
 .old-title {
     text-decoration: line-through !important;
+    font-weight: normal !important;
 }
 
 .data-current {
