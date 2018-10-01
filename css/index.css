@@ -40,7 +40,7 @@
     margin-left: 15px;
 }
 
-.my-btn{
+.my-btn {
     height: 27px;
     padding-top: 2px
 }
@@ -190,6 +190,7 @@
 .week-divider {
     width: 100%;
     padding: 4px;
+    padding-bottom: 0px;
     list-style-type: none;
     background-color: #e0e0e0;
     font-size: small;
@@ -218,7 +219,7 @@
 /*List Element Type*/
 
 .table-list {
-    font-size: small;
+    /*font-size: medium;*/
     margin-left: 2px;
     margin-right: 2px;
 }
@@ -230,7 +231,12 @@
 
 .old {
     filter: grayscale(100%);
+    font-size: small;
     /*background: url("res/pattern.png") repeat-x;*/
+}
+
+.old-title {
+    text-decoration: line-through !important;
 }
 
 .data-current {

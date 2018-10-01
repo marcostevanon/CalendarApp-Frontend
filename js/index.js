@@ -81,9 +81,10 @@ async function load() {
             var current_week_start = null;
 
             times.forEach(timeItem => {
-                var times_start = moment(timeItem.date).startOf('isoweek');
                 odd++;
 
+                var times_start = moment(timeItem.date).startOf('isoweek');
+            
                 if (!moment(times_start).isSame(current_week_start)) {
                     current_week_start = times_start;
                     var current_week_end = moment(timeItem.date).endOf('isoweek').subtract(2, 'days');
@@ -91,6 +92,14 @@ async function load() {
                     $('#times-list').append(`<li class="week-divider ${moment(now).isBetween(current_week_start, current_week_end) ? 'week-current' : ''}">
                     ${moment(current_week_start).format('ddd D MMM').toLowerCase()} - ${moment(current_week_end).format('ddd D MMM').toLowerCase()}</li>`);
                 }
+
+                var current_day_of_week = 0;
+
+                /*if (timeItem.date !== current_day_of_week) {
+                    //odd++;
+                    current_day_of_week = timeItem.date;
+                    $('#times-list').append(`<li class="day-divider text-left">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
+                }*/
 
                 var hours = { start: timeItem.timestart.split(':'), end: timeItem.timeend.split(':') }
 
@@ -107,7 +116,8 @@ async function load() {
                     <table class="full-table">
                         <tbody><tr>
                             <td colspan="2">
-                            <div><b class="title-left">${timeItem.moduleName}</b>
+                            <div><b class="title-left ${moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old-title' : ''}">
+                                ${timeItem.moduleName}</b>
                                 <div class="prof"><em>${timeItem.prof}</em></div>
                             </div>
                         </td></tr>
