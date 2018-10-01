@@ -197,6 +197,10 @@
     text-align: center;
 }
 
+.old-week {
+    font-size: x-small !important;
+}
+
 .week-current {
     color: #e6431b;
     /*E64A19*/
@@ -218,8 +222,12 @@
 
 /*List Element Type*/
 
+.old-data {
+    background-color: white !important;
+}
+
 .day-divider {
-    width: 100%;    
+    width: 100%;
     padding: 4px;
     padding-bottom: 0;
     padding-top: 7px;
@@ -236,7 +244,7 @@
 
 .data {
     border-radius: 5px;
-    padding: 5px;
+    padding: 7px;
 }
 
 .old {
@@ -381,6 +389,11 @@
     font-size: smaller;
 }
 
+.prof-right {
+    display: block;
+    width: 100%;
+}
+
 .date {
     display: inline-block;
     float: left;
@@ -406,6 +419,7 @@
     width: auto;
     text-align: left;
     font-size: 85%;
+    padding: 0;
     /*padding-right: 10px;*/
 }
 
@@ -413,6 +427,7 @@
     width: auto;
     text-align: right;
     font-size: 85%;
+    padding: 0;
     /*padding-left: 10px;*/
 }
 

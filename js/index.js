@@ -6,7 +6,7 @@ if (window.location.hostname == 'seedier-yak-5779.dataplicity.io') {
     window.location.href = 'http://93.46.119.114/Calendar/' + (urlParams.get('q') ? '?q=' + urlParams.get('q') : '')
 }
 
-var now = moment().add(0, 'day');
+var now = moment().subtract(0, 'day');
 
 function internal_error(err = '') {
     $('#loading').hide();
@@ -88,6 +88,7 @@ async function load() {
                 odd++;
 
                 var times_start = moment(timeItem.date).startOf('isoweek');
+                var old = moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now));
 
                 if (!moment(times_start).isSame(current_week_start)) {
                     current_week_start = times_start;
@@ -99,42 +100,47 @@ async function load() {
 
                 if (current_day_of_week !== timeItem.date) {
                     current_day_of_week = timeItem.date;
-                    $('#times-list').append(`<li class="day-divider dark text-center">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
+                    $('#times-list').append(`<li class="day-divider dark text-center ${old ? 'old-week' : ''}">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
                 }
 
                 var hours = { start: timeItem.timestart.split(':'), end: timeItem.timeend.split(':') }
 
                 var attributes = '';//(odd % 2 == 0 ? 'dark' : '');
-                attributes += ' ' + (moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old' : '');
+                attributes += ' ' + (old ? 'old' : '');
                 attributes += ' ' + (moment(now).isBetween(
                     moment(timeItem.date).startOf('day'),
                     moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'data-current' : '');
                 attributes += ' ' + (moment(now).isBetween(
                     moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timestart, 'DDMMYYYYHH:mm:ss'),
                     moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'blink-bg' : '');
-                var single_item = `<li id="${timeItem.webID ? timeItem.webID : odd}"
-                class="list-group-item data ${attributes}">
-                    <table class="full-table">
-                        <tbody><tr>
-                            <td colspan="2">
-                            <div><b class="title-left ${moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old-title' : ''}">
-                                ${timeItem.moduleName}</b>
-                                <div class="prof"><em>${timeItem.prof}</em></div>
+                var single_item = `<li id="${timeItem.webID ? timeItem.webID : odd}" class="list-group-item data ${attributes}">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xs-12 prof-right">
+                                <b class="title-left ${moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old-title' : ''}">
+                                    ${timeItem.moduleName}
+                                </b>
+                                <div class="prof">
+                                    <em>${timeItem.prof}</em>
+                                </div>
                             </div>
-                        </td></tr>
-                        <tr><td class="pc50sx">
-                            <div class="date">${moment(timeItem.date).format('ddd D MMM \'YY').toLowerCase()}&nbsp;&nbsp;
-                                <div class="time ${parseInt(hours.start) <= 13 ? 'AM' : 'PM'}">
-                                    ${hours.start[0]}${parseInt(hours.start[1]) ? ':' + hours.start[1] : ''} - ${hours.end[0]}${parseInt(hours.end[1]) ? ':' + hours.end[1] : ''}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 pc50sx">
+                                <div class="date">
+                                    ${moment(timeItem.date).format('ddd D MMM \'YY').toLowerCase()}&nbsp;&nbsp;
+                                    <div class="time ${parseInt(hours.start) <= 13 ? 'AM' : 'PM'} ${old ? 'old-data' : ''}">
+                                        ${hours.start[0]}${parseInt(hours.start[1]) ? ':' + hours.start[1] : ''} - ${hours.end[0]}${parseInt(hours.end[1]) ? ':' + hours.end[1] : ''}</div>
+                                </div>
                             </div>
-                        </td>
-                        <td class="pc50dx">`;
+                            <div class="col-6 pc50dx">`;
+
                 if (timeItem.room) {
                     single_item += `<div class="room">${timeItem.room}<div class="room-divider">&nbsp;-&nbsp;</div>
-                                        <div class="building ${timeItem.building === 'B' ? 'B' : 'S'}">Edf. ${timeItem.building}</div>
+                                        <div class="building ${timeItem.building === 'B' ? 'B' : 'S'} ${old ? 'old-data' : ''}">Edf. ${timeItem.building}</div>
                                     </div>`
                 } else { single_item += `<div class="room" data-toggle="tooltip" data-placement="right" title="Posizione non disponibile">N.D.</div>` }
-                single_item += `</td></tr></tbody></table></li>`;
+                single_item += `</div></div></li>`;
 
                 $('#times-list').append(single_item);
 
