@@ -1,7 +1,10 @@
 let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
 let base_url = 'http://93.46.119.114:1883/';
-var requests = [];
+
+if (window.location.hostname == 'seedier-yak-5779.dataplicity.io') {
+    window.location.href = 'http://93.46.119.114/Calendar/' + (urlParams.get('q') ? '?q=' + urlParams.get('q') : '')
+}
 
 var now = moment().add(0, 'day');
 
@@ -85,7 +88,7 @@ async function load() {
                 odd++;
 
                 var times_start = moment(timeItem.date).startOf('isoweek');
-            
+
                 if (!moment(times_start).isSame(current_week_start)) {
                     current_week_start = times_start;
                     var current_week_end = moment(timeItem.date).endOf('isoweek').subtract(2, 'days');
