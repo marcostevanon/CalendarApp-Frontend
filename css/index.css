@@ -248,9 +248,7 @@
 }
 
 .old {
-    filter: grayscale(100%);
     font-size: small;
-    /*background: url("res/pattern.png") repeat-x;*/
 }
 
 .old-title {
