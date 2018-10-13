@@ -118,7 +118,7 @@ async function load() {
                         <div class="row">
                             <div class="col-xs-12 prof-right">
                                 <b class="title-left ${moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old-title' : ''}">
-                                    ${timeItem.moduleName}
+                                    ${timeItem.moduleName ? timeItem.moduleName.split(' - ')[0] : 'N.D.'}
                                 </b>
                                 <div class="prof">
                                     <em>${timeItem.prof}</em>
