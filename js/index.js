@@ -2,10 +2,6 @@ let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
 let base_url = 'http://93.46.119.114:1883/';
 
-if (window.location.hostname == 'seedier-yak-5779.dataplicity.io') {
-    window.location.href = 'http://93.46.119.114/Calendar/' + (urlParams.get('q') ? '?q=' + urlParams.get('q') : '')
-}
-
 var now = moment().subtract(0, 'day');
 
 function internal_error(err = '') {
