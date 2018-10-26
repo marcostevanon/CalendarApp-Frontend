@@ -1,6 +1,6 @@
 let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
-let base_url = 'http://93.46.119.114:1883/';
+let base_url = 'https://marcostevanon.ovh:1883/';
 
 var now = moment().subtract(0, 'day');
 
@@ -163,3 +163,15 @@ try {
 } catch (err) {
     internal_error('unknown');
 }
+
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Update UI notify the user they can add to home screen
+    btnAdd.style.display = 'block';
+});
