@@ -1,20 +1,26 @@
 {
-  "short_name": "ITS Cal",
-  "name": "ITS Calendar",
-  "icons": [
-    {
-      "src": "res/cal-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "res/cal-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
-  "start_url": "index.html",
-  "display": "standalone",
-  "theme_color": "#444444"
+    "short_name": "ITS Cal",
+    "name": "ITS Calendar",
+    "icons": [
+        {
+            "src": "res/cal-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "res/cal-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "res/cal-1024.png",
+            "type": "image/png",
+            "sizes": "1024x1024"
+        }
+    ],
+    "start_url": "https://calendar.marcostevanon.ovh/index.html",
+    "display": "standalone",
+    "theme_color": "#444444",
+    "lang": "Italian",
+    "orientation": "portrait"
 }
-

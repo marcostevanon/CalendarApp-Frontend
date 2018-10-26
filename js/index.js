@@ -2,7 +2,7 @@ let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
 let base_url = 'https://marcostevanon.ovh:1883/';
 
-var now = moment().subtract(0, 'day');
+var now = moment().subtract(0, 'day')
 
 function internal_error(err = '') {
     $('#loading').hide();
@@ -13,7 +13,10 @@ function internal_error(err = '') {
 }
 
 async function load() {
+    if (localStorage.getItem('course') && !query) query = localStorage.getItem('course');
     if (query) {
+        if (localStorage.getItem('course')) localStorage.setItem('course', query);
+        
         $('#info-visualizer').hide();
 
         //fetch and create COURSE LIST
@@ -65,7 +68,7 @@ async function load() {
 
         try {
             var lastUpdate = await fetch(`${base_url}lastupdt/${query}`).then(res => res.json());
-            $('#last-update').text(moment(lastUpdate).subtract(2, 'hours').toNow(true) + ' fa');
+            $('#last-update').text(moment(lastUpdate).toNow(true) + ' fa');
         } catch (err) {
             $('#last-update').text('N.D.');
         }
@@ -114,7 +117,7 @@ async function load() {
                         <div class="row">
                             <div class="col-xs-12 prof-right">
                                 <b class="title-left ${moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old-title' : ''}">
-                                    ${timeItem.moduleName ? timeItem.moduleName.split(' - ')[0] : 'N.D.'}
+                                    ${timeItem.moduleName}
                                 </b>
                                 <div class="prof">
                                     <em>${timeItem.prof}</em>
@@ -163,15 +166,3 @@ try {
 } catch (err) {
     internal_error('unknown');
 }
-
-
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
-    e.preventDefault();
-    // Stash the event so it can be triggered later.
-    deferredPrompt = e;
-    // Update UI notify the user they can add to home screen
-    btnAdd.style.display = 'block';
-});
