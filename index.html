@@ -41,7 +41,7 @@
     <header id="header">
         <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
             <!--Logo-->
-            <a class="navbar-brand" href="../">
+            <a class="navbar-brand" href="../?q=home">
                 <img src="res/ITS_Logo.png" width="30" height="30" class="d-inline-block align-top" alt="">&nbsp;ITS
                 Calendar</a>
             <!--Mobile Toggle Button-->
@@ -126,17 +126,6 @@
             </div>
     </section>
 
-    <!--<div id="btnAdd" class="banner">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12 p-4">
-                    Add to home page
-                </div>
-            </div>
-        </div>
-    </div>
--->
-
     <footer id="footer" class="container">
         <div class="row">
             <div class="col-sm-1 col-md-2 col-lg-3"></div>
@@ -182,12 +171,10 @@
     <script>
         if ("serviceWorker" in navigator) {
             console.log("Will the service worker register?");
-            navigator.serviceWorker.register('service-worker.js')
-                .then(function (reg) {
-                    console.log("Yes, it did.");
-                }).catch(function (err) {
-                    console.log("No it didn't. This happened: ", err)
-                });
+            navigator.serviceWorker
+                .register('service-worker.js')
+                .then(reg => console.log("Yes, it did."))
+                .catch(err => console.log("No it didn't. This happened: ", err));
         }
     </script>
 </body>

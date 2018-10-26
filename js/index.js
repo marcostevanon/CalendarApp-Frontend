@@ -1,5 +1,6 @@
 let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
+console.log(query);
 let base_url = 'https://marcostevanon.ovh:1883/';
 
 var now = moment().subtract(0, 'day')
@@ -13,10 +14,13 @@ function internal_error(err = '') {
 }
 
 async function load() {
-    if (localStorage.getItem('course') && !query) query = localStorage.getItem('course');
+    console.log(query);
+    if (localStorage.getItem('course') && !query)
+        window.location.href = '?q=' + localStorage.getItem('course');
+    if (query == 'home') query = null;
     if (query) {
-        if (localStorage.getItem('course')) localStorage.setItem('course', query);
-        
+        if (!localStorage.getItem('course')) localStorage.setItem('course', query);
+
         $('#info-visualizer').hide();
 
         //fetch and create COURSE LIST
