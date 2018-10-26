@@ -1,6 +1,5 @@
 let urlParams = new URLSearchParams(window.location.search);
 let query = urlParams.get('q');
-console.log(query);
 let base_url = 'https://marcostevanon.ovh:1883/';
 
 var now = moment().subtract(0, 'day')

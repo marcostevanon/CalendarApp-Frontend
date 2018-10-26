@@ -1,13 +1,5 @@
 /*Loading*/
 
-/*.banner {
-    position: absolute;
-    margin-top: -100px;
-    bottom: 0;
-    border-top: 10px solid #000;
-    box-shadow: 5px solid #000;
-}*/
-
 #loading {
     z-index: 10000;
     background: white;
