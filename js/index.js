@@ -38,12 +38,11 @@ async function load() {
             $('#course-list').append(`
                 <li class="nav-item">
                     <div class="nav-link">
-                        <span ${!item.active ? 'tabindex="0" data-toggle="tooltip" data-placement="bottom" title="Corso non disponibile"' : ''}>
-                            <button class="btn btn-sm btn-block ${item.csvCode === query ? 'btn-light' : 'btn-outline-light'} btn-bold my-btn"
-                                type="button" ${!item.active ? 'disabled style="pointer-events: none;"' : ''}
-                                onclick="window.location = '?q=${item.csvCode}'">${item.name}
+                        <a style="text-decoration:none" href="index.html?q=${item.csvCode}">
+                            <button class="btn btn-sm btn-block ${item.csvCode === query ? 'btn-light' : 'btn-outline-light'} btn-bold my-btn" type="button">
+                                ${item.name}
                             </button>
-                        </span>
+                        </a>
                     </div>
                 </li>`);
         });
