@@ -10,8 +10,7 @@
     <meta name="author" content="Marco Stevanon, marco.stevanon@gmail.com" />
     <meta name='copyright' content='Marco Stevanon'>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/index.css" />
     <link rel="icon" href="res/cal-30.png" />
 
@@ -41,7 +40,7 @@
     <header id="header">
         <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
             <!--Logo-->
-            <a class="navbar-brand" href="?q=home">
+            <a class="navbar-brand" href="index.html?q=home">
                 <img src="res/cal-30.png" class="d-inline-block align-top" alt="">&nbsp;ITS
                 Calendar</a>
             <!--Mobile Toggle Button-->
@@ -141,27 +140,16 @@
         <img src="res/cal-192.png" width="100" height="100" class="mt-5">
         <h4 class="mt-3">Something goes wrong</h4>
         <code id="error-message"></code><br>
-        <button id="btn-home" type="button" class="btn btn-info mt-3" onclick="window.location.href='?q=home'">Vai
+        <button id="btn-home" type="button" class="btn btn-info mt-3" onclick="window.location.href='index.html?q=home'">Vai
             alla Home</button>
     </div>
 
-    <!--
-    <div class="error text-center mt-5">
-        <img src="res/404.png" width="150px">
-        <h4 class="mt-3">Page not found<h4>
-        <button class="btn btn-info btn-sm mt-2" onclick="window.location.href='?q=home'">Home</button>
-    </div>
-    -->
-
-    <script src="js/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="js/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
-    <script src="js/moment/min/moment.min.js"></script>
-    <script src="js/moment/locale/it.js" charset="UTF-8"></script>
-    <script src="js/index.js?t=1"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/js/"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="node_modules/moment/min/moment.min.js"></script>
+    <script src="node_modules/moment/locale/it.js" charset="UTF-8"></script>
+    <script src="js/index.js"></script>
     <script>
         if ("serviceWorker" in navigator) {
             console.log("Will the service worker register?");
@@ -174,9 +162,6 @@
 </body>
 
 </html>
-
-
-
 
 <!--TODO COMPARE MODAL-->
 <div id="compare_modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"

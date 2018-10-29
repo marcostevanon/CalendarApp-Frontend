@@ -1,0 +1,25 @@
+{
+  "name": "calendar-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for calendar app",
+  "main": "index.html",
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "jquery": "^3.3.1",
+    "moment": "^2.22.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcostevanon/CalendarApp-Frontend.git"
+  },
+  "author": "marco.stevanon@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcostevanon/CalendarApp-Frontend/issues"
+  },
+  "homepage": "https://calendar.marcostevanon.ovh"
+}
