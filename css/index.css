@@ -219,7 +219,6 @@
 .span-week-current {
     color: #000 !important;
     font-style: italic;
-    display: inline-block;
     float: right;
 }
 
@@ -396,7 +395,6 @@
 }
 
 .date {
-    display: inline-block;
     float: left;
     margin-top: 5px;
 }
@@ -454,6 +452,16 @@
 
 .B {
     background-color: #FFE082;
+}
+
+.note {
+    font-size: 90%;
+    color: #fafafa;
+    background-color: #ff3838;
+    display: inline-block;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 /*Footer*/

@@ -140,9 +140,20 @@ async function load() {
                 if (timeItem.room) {
                     single_item += `<div class="room">${timeItem.room}<div class="room-divider">&nbsp;-&nbsp;</div>
                                         <div class="building ${timeItem.building === 'B' ? 'B' : 'S'} ${old ? 'old-data' : ''}">Edf. ${timeItem.building}</div>
-                                    </div>`
-                } else { single_item += `<div class="room" data-toggle="tooltip" data-placement="right" title="Posizione non disponibile">N.D.</div>` }
-                single_item += `</div></div></li>`;
+                                    </div></div></div>`
+                } else { single_item += `<div class="room" data-toggle="tooltip" data-placement="right" title="Posizione non disponibile">N.D.</div></div></div>` }
+
+                if (timeItem.note) {
+                    single_item += `
+                        <div class="row">
+                            <div class="col-12 py-1 px-0">
+                                <div class="note">
+                                    ${timeItem.note}</div>
+                                </div>
+                        </div>`
+                }
+
+                single_item += `</li>`;
 
                 $('#times-list').append(single_item);
 
