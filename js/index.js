@@ -114,12 +114,20 @@ async function load() {
                 attributes += ' ' + (moment(now).isBetween(
                     moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timestart, 'DDMMYYYYHH:mm:ss'),
                     moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'blink-bg' : '');
+
+                var title = null;
+                if (timeItem.moduleName) {
+                    var titleTemp = timeItem.moduleName.split(' - ');
+                    if (titleTemp.length > 1) title = titleTemp.slice(0, -1).join(' - ');
+                    else title = titleTemp;
+                }
+
                 var single_item = `<li id="${timeItem.webID ? timeItem.webID : odd}" class="list-group-item data ${attributes}">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-xs-12 prof-right">
                                 <b class="title-left ${moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss').isBefore(moment(now)) ? 'old-title' : ''}">
-                                    ${timeItem.moduleName}
+                                    ${title}
                                 </b>
                                 <div class="prof">
                                     <em>${timeItem.prof}</em>
@@ -145,10 +153,9 @@ async function load() {
                 if (timeItem.note) {
                     single_item += `
                         <div class="row">
-                            <div class="col-12 py-1 px-0">
-                                <div class="note">
-                                    ${timeItem.note}</div>
-                                </div>
+                            <div class="col-12 ${old ? 'note-head-old' : 'note-head'}">
+                                <div class="${old ? 'note-old' : 'note'}">${timeItem.note}</div>
+                            </div>
                         </div>`
                 }
 
