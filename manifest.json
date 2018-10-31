@@ -3,19 +3,29 @@
     "name": "ITS Calendar",
     "icons": [
         {
+            "src": "res/cal-30.png",
+            "sizes": "30x30",
+            "type": "image/png"
+        },
+        {
+            "src": "res/cal-100.png",
+            "sizes": "100x100",
+            "type": "image/png"
+        },
+        {
             "src": "res/cal-192.png",
-            "type": "image/png",
-            "sizes": "192x192"
+            "sizes": "192x192",
+            "type": "image/png"
         },
         {
             "src": "res/cal-512.png",
-            "type": "image/png",
-            "sizes": "512x512"
+            "sizes": "512x512",
+            "type": "image/png"
         },
         {
             "src": "res/cal-1024.png",
-            "type": "image/png",
-            "sizes": "1024x1024"
+            "sizes": "1024x1024",
+            "type": "image/png"
         }
     ],
     "start_url": "https://calendar.marcostevanon.ovh/index.html",
