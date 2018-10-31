@@ -14,8 +14,8 @@
 
 @media (min-width: 767px) {
     .navbar {
-        padding-top: 0px !important;
-        padding-bottom: 0px !important;
+        padding-top: 0px;
+        padding-bottom: 0px;
     }
 }
 
@@ -217,7 +217,7 @@
 }
 
 .span-week-current {
-    color: #000 !important;
+    color: #000;
     font-style: italic;
     float: right;
 }
@@ -254,8 +254,8 @@
 }
 
 .old-title {
-    text-decoration: line-through !important;
-    font-weight: normal !important;
+    text-decoration: line-through;
+    font-weight: normal;
 }
 
 .data-current {

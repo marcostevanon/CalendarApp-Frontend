@@ -9,6 +9,7 @@
     <meta name="theme-color" content="#444444" />
     <meta name="author" content="Marco Stevanon, marco.stevanon@gmail.com" />
     <meta name='copyright' content='Marco Stevanon'>
+    <meta name="description" content="ITS Calendar Pordenone - Trova gli orari del tu corso in modo facile e veloce">
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/index.css" />
@@ -41,7 +42,7 @@
         <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
             <!--Logo-->
             <a class="navbar-brand" href="index.html?q=home">
-                <img src="res/cal-30.png" class="d-inline-block align-top" alt="">&nbsp;ITS
+                <img src="res/cal-30.png" width="30" height="30" class="d-inline-block align-top" alt="">&nbsp;ITS
                 Calendar</a>
             <!--Mobile Toggle Button-->
             <button id="btn-expand" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -75,7 +76,7 @@
                 <div class="col-sm-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
                     <div class="row">
-                        <img src="res/cal-192.png" width="90" height="90" class="ml-auto mr-auto mt-4">
+                        <img src="res/cal-100.png" width="100" height="100" class="ml-auto mr-auto mt-4" alt="itslogo192">
                         <h3 class="col-12 mt-2">Seleziona un corso</h3>
                         <div class="spacer mt-3"></div>
                         <div class="col-12 text-left">1° Anno</div>
@@ -115,8 +116,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
+        </div>
     </section>
 
     <footer id="footer" class="container">
@@ -124,7 +125,7 @@
             <div class="col-sm-1 col-md-2 col-lg-3"></div>
             <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
                 <hr>
-                <div align="center" class="footer-warning">
+                <div class="footer-warning text-center">
                     ITS Calendar non è un portale ufficiale, i dati utilizzati provengono direttamente da
                     <a href="https://www.unipordenone.it/mrbs/day.php" target="_blank">www.unipordenone.it</a>
                     e non sono soggetti a controlli.
@@ -137,7 +138,7 @@
     </footer>
 
     <div class="error text-center mt-5">
-        <img src="res/cal-192.png" width="100" height="100" class="mt-5">
+        <img src="res/cal-100.png" width="100" height="100" class="mt-5" alt="itslogo192">
         <h4 class="mt-3">Something goes wrong</h4>
         <code id="error-message"></code><br>
         <button id="btn-home" type="button" class="btn btn-info mt-3" onclick="window.location.href='index.html?q=home'">Vai
@@ -148,7 +149,7 @@
     <script src="js/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="node_modules/moment/min/moment.min.js"></script>
-    <script src="node_modules/moment/locale/it.js" charset="UTF-8"></script>
+    <script src="node_modules/moment/locale/it.js"></script>
     <script src="js/index.js"></script>
     <script>
         if ("serviceWorker" in navigator) {
@@ -159,26 +160,26 @@
                 .catch(err => console.log("No it didn't. This happened: ", err));
         }
     </script>
+
+    <!--TODO COMPARE MODAL-->
+    <!--<div id="compare_modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="col-auto my-1">
+                    <div class="custom-control custom-checkbox mr-sm-2">
+                        <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
+                        <label class="custom-control-label" for="customControlAutosizing">Remember my preference</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" onclick="compare(); $('#compare_modal').modal('hide'); load();">Confronta
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>-->
 </body>
 
 </html>
-
-<!--TODO COMPARE MODAL-->
-<div id="compare_modal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="col-auto my-1">
-                <div class="custom-control custom-checkbox mr-sm-2">
-                    <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
-                    <label class="custom-control-label" for="customControlAutosizing">Remember my preference</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" onclick="compare(); $('#compare_modal').modal('hide'); load();">Confronta
-                </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-            </div>
-        </div>
-    </div>
-</div>
