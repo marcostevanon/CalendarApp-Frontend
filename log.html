@@ -12,25 +12,42 @@
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="icon" href="res/cal-30.png" />
 
-    <title id="title">Scraper Logs - ITS Cal</title>
+    <title id="title">ITS Calendar -Logs</title>
     <meta http-equiv="refresh" content="180">
 </head>
 
-<body>
-    <div class="container p-0">
-        <table class="table table-hover table-dark table-sm">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">date</th>
-                    <th scope="col">code</th>
-                    <th scope="col">action</th>
-                    <th scope="col">prof</th>
-                    <th scope="col">times</th>
-                </tr>
-            </thead>
-            <tbody id="table-entry"></tbody>
-        </table>
+<body style="background-color: #999999">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 pl-0 pr-1 mb-4">
+                <table class="table table-hover table-dark table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">date</th>
+                            <th scope="col">msg</th>
+                            <th scope="col">times</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mail-table"></tbody>
+                </table>
+            </div>
+            <div class="col-sm-12 col-md-6 pr-0 pl-1">
+                <table class="table table-hover table-dark table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">date</th>
+                            <th scope="col">code</th>
+                            <th scope="col">action</th>
+                            <th scope="col">prof</th>
+                            <th scope="col">times</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scraper-table"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
