@@ -18,7 +18,7 @@ fetch(`https://marcostevanon.ovh:1883/mail`)
     .then(res => res.json())
     .then(res => {
         res.forEach(item => {
-            $('#scraper-table').append(
+            $('#mail-table').append(
                 `<tr>
                     <th scope="row">${item.id}</th>
                     <td>${moment(item.date).format('DD/MM/YYYY H:mm:ss')}</td>
