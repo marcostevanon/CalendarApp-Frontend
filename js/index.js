@@ -3,8 +3,6 @@ let query = urlParams.get('q');
 let base_url = 'https://marcostevanon.ovh:1883/';
 
 var now = moment().subtract(0, 'day')
-var offline = false;
-var ls = new SecureLS();
 
 function internal_error(err = '') {
     $('#loading').hide();
@@ -16,32 +14,18 @@ function internal_error(err = '') {
 
 async function load() {
     console.log(query);
-    if (ls.get('course') && !query)
-        window.location.href = '?q=' + ls.get('course');
+    if (localStorage.getItem('course') && !query)
+        window.location.href = '?q=' + localStorage.getItem('course');
     if (query == 'home') query = null;
     if (query) {
-        if (!ls.get('course')) ls.set('course', query);
+        if (!localStorage.getItem('course')) localStorage.setItem('course', query);
 
         $('#info-visualizer').hide();
 
         //fetch and create COURSE LIST
         try {
             var courseList = await fetch(`${base_url}course/list`).then(res => res.json());
-            ls.set('courseList', JSON.stringify(courseList));
-            ls.set('lastTimeOnline', moment().toISOString());
-        } catch (err) {
-            if (JSON.parse(ls.get('courseList'))) {
-                if (moment(ls.get('lastTimeOnline'))
-                    .isAfter(moment().subtract(5, 'days'))) { offline = true; }
-                var courseList = JSON.parse(ls.get('courseList'));
-            } else {
-                internal_error('network error'); return;
-            }
-        }
-
-        if (offline) {
-            // TODO show data may be old banner
-        }
+        } catch (err) { internal_error('network error'); return; }
 
         //List creation
         var group = 1;
@@ -77,16 +61,8 @@ async function load() {
         try {
             var times = await fetch(`${base_url}times/${query}?date=${moment(now).add(2/*week end friday, saturday times are hidden*/, 'day').startOf('isoweek').format('YYYY-MM-DD')}`).then(res => res.json());
             var courseCurrent = await fetch(`${base_url}course/${query}`).then(res => res.json());
-            ls.set('times-' + query, JSON.stringify(times));
-            ls.set('courseCurrent', JSON.stringify(courseCurrent));
         } catch (err) {
-            if (offline && ls.get('times-' + query)) {
-                var times = JSON.parse(ls.get('times-' + query));
-                var courseCurrent = JSON.parse(ls.get('courseCurrent'));
-            } else {
-                internal_error('You are offline, ' + query + ' has no offline data'); return;
-                internal_error('network error'); return;
-            }
+            internal_error('network error'); return;
         }
 
         $('#title').text(`${courseCurrent.type} - ${courseCurrent.name}`);
@@ -94,15 +70,9 @@ async function load() {
 
         try {
             var lastUpdate = await fetch(`${base_url}lastupdt/${query}`).then(res => res.json());
-            ls.set('lastUpdate-' + query, JSON.stringify(lastUpdate));
             $('#last-update').text(moment(lastUpdate).toNow(true) + ' fa');
         } catch (err) {
-            if (offline) {
-                var lastUpdate = JSON.parse(ls.get('lastUpdate-' + query));
-                $('#last-update').text(moment(lastUpdate).toNow(true) + ' fa')
-            } else {
-                $('#last-update').text('N.D.');
-            }
+            $('#last-update').text('N.D.');
         }
 
         if (!times.length) {
