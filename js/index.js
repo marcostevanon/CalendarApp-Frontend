@@ -13,6 +13,12 @@ function internal_error(err = '') {
 }
 
 async function load() {
+
+    //fetch COURSE LIST
+    try {
+        var courseList = await fetch(`${base_url}course/list`).then(res => res.json());
+    } catch (err) { internal_error('network error'); return; }
+
     console.log(query);
     if (localStorage.getItem('course') && !query)
         window.location.href = '?q=' + localStorage.getItem('course');
@@ -21,11 +27,6 @@ async function load() {
         if (!localStorage.getItem('course')) localStorage.setItem('course', query);
 
         $('#info-visualizer').hide();
-
-        //fetch and create COURSE LIST
-        try {
-            var courseList = await fetch(`${base_url}course/list`).then(res => res.json());
-        } catch (err) { internal_error('network error'); return; }
 
         //List creation
         var group = 1;
@@ -177,6 +178,27 @@ async function load() {
         $('#course-list').hide();
         $('#time-visualizer').hide();
         $('#footer').hide();
+
+        $('#info-visualizer').show();
+
+        //List creation
+        var group = 0;
+        courseList.forEach(item => {
+            if (item.year !== group) {
+                group = item.year;
+                $('#home-course-list').append(`<div class="col-12 text-left spacer">${item.year}° Anno</div>`)
+            }
+
+            $('#home-course-list').append(`
+                <div class="col">
+                    <button class="btn btn-sm btn-block btn-outline-dark btn-bold" type="button" onclick="window.location = '?q=${item.csvCode}'">
+                        ${item.name}
+                    </button>
+                </div>`);
+        });
+        $('#course-list').append(`<div style="color: white" class="spacer"></div>`);
+
+
     }
     $('[data-toggle="tooltip"]').tooltip();
 }
