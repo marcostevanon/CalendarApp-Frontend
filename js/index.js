@@ -7,6 +7,16 @@ function internal_error(err = '') {
     $('#footer').hide();
     $('.error').show();
     $('#error-message').text('Error: ' + err);
+
+    localStorage.clear();
+    let q = new URLSearchParams(window.location.search).get('q');
+    $('.error').append(`<br><br>
+        <div class="alert alert-warning" style="display: inline-block">
+            <h5><b>Attenzione</b></h5>
+            in seguito ad un intervento di manutenzione<br>
+            alcuni link potrebbero non funzionare,<br>
+            clicca <b>Vai alla Home</b> per tornare ad utilizzare l\'app
+        </div>`);
 }
 
 async function getCourseList() {
@@ -127,9 +137,6 @@ async function setSectionTimes(query) {
 
         //timesComplete.push(item[0]);
 
-
-        console.log(timesComplete);
-
         timesComplete.forEach(timeItem => {
             if (timeItem.id == null) {
                 //$('#times-list').append(`<li class="list-group-item data"><div class="row"><div class="col">---</div></div></li>`);
@@ -231,7 +238,7 @@ async function setSectionTimes(query) {
 async function load() {
     let courseList = await getCourseList();
     let query = new URLSearchParams(window.location.search).get('q');
-    
+
     if (query == 'home') { query = null; }
     else
         if (!query) {
