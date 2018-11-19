@@ -19,17 +19,11 @@ async function getCourseList() {
     }
 }
 
-function getVerifiedQuery(courseList) {
-    let query = new URLSearchParams(window.location.search).get('q');
-    if (query == 'home') return null;
-
-    let query_check = courseList.find(item => { return item.csvCode == query; });
-    if (query_check) {
-        if (localStorage.getItem('course') && !query)
-            window.location.href = '?q=' + localStorage.getItem('course');
-        return query;
-    }
-    return internal_error('course does not exist');
+function getVerifiedQuery(courseList, query) {
+    let query_check = courseList.find(item => { return item.csvCode == query });
+    if (query_check)
+        return query
+    else return null;
 }
 
 function generateNavbarList(courseList, query) {
@@ -236,7 +230,20 @@ async function setSectionTimes(query) {
 
 async function load() {
     let courseList = await getCourseList();
-    let query = getVerifiedQuery(courseList);
+    let query = new URLSearchParams(window.location.search).get('q');
+    
+    if (query == 'home') { query = null; }
+    else
+        if (!query) {
+            if (localStorage.getItem('course')) {
+                let query_check = getVerifiedQuery(courseList, localStorage.getItem('course'));
+                if (query_check) window.location.href = '?q=' + localStorage.getItem('course');
+                else return internal_error('course does not exist');
+            }
+        } else {
+            let query_check = getVerifiedQuery(courseList, query);
+            if (!query_check) { return internal_error('course does not exist'); }
+        }
 
     if (query) {
         if (!localStorage.getItem('course')) localStorage.setItem('course', query);
