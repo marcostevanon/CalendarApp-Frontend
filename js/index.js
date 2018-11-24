@@ -170,12 +170,13 @@ async function setSectionTimes(query) {
                     moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timestart, 'DDMMYYYYHH:mm:ss'),
                     moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'blink-bg' : '');
 
-                var title = null;
-                if (timeItem.moduleName) {
-                    var titleTemp = timeItem.moduleName.split(' - ');
-                    if (titleTemp.length > 1) title = titleTemp.slice(0, -1).join(' - ');
-                    else title = titleTemp;
-                }
+                var title = timeItem.moduleName;
+                // var title = null;
+                // if (timeItem.moduleName) {
+                //     var titleTemp = timeItem.moduleName.split(' - ');
+                //     if (titleTemp.length > 1) title = titleTemp.slice(0, -1).join(' - ');
+                //     else title = titleTemp;
+                // }
 
                 /*console.log(current_data_of_day);
                 console.log(timeItem);
