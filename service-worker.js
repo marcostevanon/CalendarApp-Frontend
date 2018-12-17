@@ -117,7 +117,7 @@ self.addEventListener('fetch', function (event) {
                 return netResp;
               })
             return response || fetchPromise; */
-            var fetchPromise = fetchWithCache();
+            var fetchPromise = fetchWithCache(event.request.clone());
             return response || fetchPromise;
           })
           .catch(function (err) {
@@ -132,11 +132,19 @@ self.addEventListener('fetch', function (event) {
 function fetchWithCache(request) {
   return fetch(request)
     .then(function (netResp) {
-      //if the fetch fullfill the response will be saved in the cache and returned to the
+      //if the fetch fullfill the response will be saved in the cache and returned to the      
       if (!netResp || netResp.status !== 200 || netResp.type !== 'basic' || netResp.headers.get('Content-Type') === 'application/json') {
         return netResp;
       }
-      cache.put(request, netResp.clone());
-      return netResp;
+      return caches
+      .open(cache_names.app_shell)
+      .then(function (cache) {
+        cache.put(request, netResp.clone());
+        return netResp;
+      })
+    }).catch(err => {
+      return new Response(null, {
+        status: 500
+      });
     })
 }

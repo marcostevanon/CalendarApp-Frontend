@@ -1,6 +1,11 @@
 let base_url = 'https://marcostevanon.ovh:1883/';
 var now = moment();
 var selected_course = 'none';
+var loader = $('#loading');
+var appBody = $('#app-body');
+var mobile_btn = $('#btn-expand');
+var footer = $('#footer');
+var updateTimer;
 var course_list;
 if (localStorage.getItem('course-list')) {
     course_list = JSON.parse(localStorage.getItem('course-list'));
@@ -10,62 +15,74 @@ if (localStorage.getItem('selected_course')) {
 }
 var fetch_links = {
     lastupdt: {
-        url: `${base_url}lastupdt/${selected_course}`,
+        url: () => `${base_url}lastupdt/${selected_course}`,
         ls_label: 'lst'
     },
     sectiontimes: {
-        url: `${base_url}times/${selected_course}?date=${moment(now).add(2/*week end friday, saturday times are hidden*/, 'day').startOf('isoweek').format('YYYY-MM-DD')}`,
+        url: () => `${base_url}times/${selected_course}?date=${moment(now).add(2/*week end friday, saturday times are hidden*/, 'day').startOf('isoweek').format('YYYY-MM-DD')}`,
         ls_label: 'stm'
     },
     sectionheader: {
-        url: `${base_url}course/${selected_course}`,
+        url: () =>  `${base_url}course/${selected_course}`,
         ls_label: 'shd'
     }
 }
 
-function setSelectedCourse(course) {
+async function setSelectedCourse(course) {
     selected_course = course;
     saveSelectedCourse();
-    location.reload();
+    await updateData(selected_course);
+    load();
 }
 
 function saveSelectedCourse() {
     localStorage.setItem('selected_course', selected_course);
 }
 
-
 function internal_error(err = '') {
-    $('#loading').hide();
-    $('#section').hide();
-    $('#footer').hide();
-    $('.error').show();
+    //$('#section').hide();
+    loader.show();
+    footer.hide();
+    appBody.empty();
+    appBody.append(`<div class="error text-center mt-5">
+                        <img src="res/cal-100.png" width="100" height="100" class="mt-5" alt="itslogo192">
+                        <h4 class="mt-3">Something goes wrong</h4>
+                        <code id="error-message"></code><br>
+                        <button id="btn-home" type="button" class="btn btn-info mt-3" onclick="setSelectedCourse('none')">Vai
+                            alla Home</button>
+                        <br><br>
+                        <div class="alert alert-warning" style="display: inline-block">
+                            <h5><b>Attenzione</b></h5>
+                            in seguito ad un intervento di manutenzione<br>
+                            alcuni link potrebbero non funzionare,<br>
+                            clicca <b>Vai alla Home</b> per tornare ad utilizzare l\'app
+                        </div>
+                    </div>`);
+    
     $('#error-message').text('Error: ' + err);
-
-    //localStorage.clear();
-    //let q = new URLSearchParams(window.location.search).get('q');
-    // se sto coso è statico, perchè è qui e non direttamente nell html
-    $('.error').append(`<br><br>
-        <div class="alert alert-warning" style="display: inline-block">
-            <h5><b>Attenzione</b></h5>
-            in seguito ad un intervento di manutenzione<br>
-            alcuni link potrebbero non funzionare,<br>
-            clicca <b>Vai alla Home</b> per tornare ad utilizzare l\'app
-        </div>`);
-
+    loader.hide();
     throw "network error";
 }
 
 async function getCourseList() {
     if (course_list && course_list.length > 0) {
+        fetch(`${base_url}course/list`)
+            .then(res => res.json())
+            .then(result => {
+                localStorage.setItem('course-list', JSON.stringify(result));
+            })
+            .catch((err) => {
+                console.log('Error: ' + err);
+            });
         return course_list;
     }
     course_list = await fetch(`${base_url}course/list`)
         .then(res => res.json())
-        .catch(function (err) {
+        .then(result => result)
+        .catch((err) => {
             console.log('Error: ' + err);
-            internal_error('network error');
-            return [];
-        })
+            throw 'network error';            
+        });
     localStorage.setItem('course-list', JSON.stringify(course_list));
     return course_list;
 }
@@ -83,14 +100,16 @@ function isQueryValid(courseList, query) {
 }
 
 function generateNavbarList(courseList, query) {
+    let courseListNav = $('#nav-course-list');
+    courseListNav.empty();
     var group = 1;
     courseList.forEach(item => {
         if (item.year !== group) {
             group = item.year;
-            $('#course-list').append(`<div class="spacer"></div>`);
+            courseListNav.append(`<div class="spacer"></div>`);
         }
 
-        $('#course-list').append(`
+        courseListNav.append(`
             <li class="nav-item"><div class="nav-link">                
                     <button type="button" class="btn btn-sm btn-block my-btn
                         ${item.csvCode === query ? 'btn-light' : 'btn-outline-light'}" onclick="setSelectedCourse('${item.csvCode}')">
@@ -98,42 +117,41 @@ function generateNavbarList(courseList, query) {
                     </button>                
             </div></li>`);
     });
-    $('#course-list').append(`<div class="spacer"></div>`);
+    courseListNav.append(`<div class="spacer"></div>`);
 }
 
-async function setHomeMenu() {
-    let courseList = await getCourseList();
+async function setCourseHomeMenu(courseList) {
+    let homeCourseList = $('#home-course-list');
+    homeCourseList.empty();
 
     var group = 0;
     courseList.forEach(item => {
         if (item.year !== group) {
             group = item.year;
-            $('#home-course-list').append(`<div class="col-12 text-left spacer">${item.year}° Anno</div>`)
+            homeCourseList.append(`<div class="col-12 text-left spacer">${item.year}° Anno</div>`)
         }
 
-        $('#home-course-list').append(`
+        homeCourseList.append(`
             <div class="col">
                 <button class="btn btn-sm btn-block btn-outline-dark btn-bold" type="button" onclick="setSelectedCourse('${item.csvCode}')">
                     ${item.name}
                 </button>
             </div>`);
     });
-    $('#course-list').append(`<div style="color: white" class="spacer"></div>`);
+    //$('#nav-course-list').append(`<div style="color: white" class="spacer"></div>`);
 }
 
-async function setSectionHeader() {
-    let courseCurrent = await fetchData(fetch_links.sectionheader, selected_course);
-    if (courseCurrent) {
-        $('#title').text(`${courseCurrent.type} - ${courseCurrent.name}`);
-        $('#course-title').text(`${courseCurrent.type} - ${courseCurrent.name}`);
+function setSectionHeader(course) {
+    if (course) {
+        $('#title').text(`${course.type} - ${course.name}`);
+        $('#course-title').text(`${course.type} - ${course.name}`);
     }
     else {
         console.log(err);
     }
 }
 
-async function setSectionLastUpdate() {
-    let lastUpdate = await fetchData(fetch_links.lastupdt, selected_course);
+function setSectionLastUpdate(lastUpdate) {
     if (lastUpdate) {
         $('#last-update').text(moment(lastUpdate).toNow(true) + ' fa');
     }
@@ -141,45 +159,68 @@ async function setSectionLastUpdate() {
         $('#last-update').text('N.D.');
     }
 }
-//fetchSectionTimes
-async function fetchData(act_param, query) {
-    let localStorage_label = query + act_param.ls_label;
-    let tmp = localStorage.getItem(localStorage_label);
 
-    if (tmp) {
-        fetch(act_param.url)
-            .then(function (resp) {
-                resp.json()
-                    .then(res => localStorage.setItem(localStorage_label, JSON.stringify(res)),
-                        err => console.log(err));
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-        try {
-            return JSON.parse(tmp);
-        } catch (err) {
-            return tmp;
-        }
-    }
-    //'https://marcostevanon.ovh:1883/'
-    tmp = await fetch(act_param.url)
-        .then(function (resp) {
-            return resp.json();
+//with the use of Promise.all now the data will be updated only if both the three request fullfill
+async function updateData(course, forceReload) {
+    let updateChain = [
+        getPromiseGET(fetch_links.lastupdt.url()),
+        getPromiseGET(fetch_links.sectionheader.url()),
+        getPromiseGET(fetch_links.sectiontimes.url())
+    ]
+    await Promise.all(updateChain)
+        .then(resArray => {
+            localStorage.setItem(course + fetch_links.sectionheader.ls_label,
+                toLocalStorage(resArray[1]));
+
+            localStorage.setItem(course + fetch_links.sectiontimes.ls_label,
+                toLocalStorage(resArray[2]));
+
+            if (resArray[0] !== getDataLocal(fetch_links.lastupdt.ls_label, course)) {
+                localStorage.setItem(course + fetch_links.lastupdt.ls_label,
+                    toLocalStorage(resArray[0]));
+                if (forceReload)
+                    showLessons();
+            }
         })
-        .catch(function (err) {
+        .catch(err => {
             console.log(err);
-            internal_error('network error');
-            return undefined;
+            clearTimeout(updateTimer);
+            updateTimer = setTimeout(() => {
+                if (selected_course !== 'none')
+                    updateData(selected_course, true);
+            }, 25000);
         });
-    if (tmp) {
-        localStorage.setItem(localStorage_label, JSON.stringify(tmp));
-    }
-    return tmp;
 }
 
+function toLocalStorage(elem) {
+    return isString(elem) ? elem : JSON.stringify(elem);
+}
 
-async function setSectionTimes(times) {
+function isString(elem) {
+    if (typeof elem == 'string' || elem instanceof String)
+        return true;
+    return false;
+}
+
+function getPromiseGET(url) {
+    return new Promise((resolve, reject) => {
+        fetch(url)
+            .then(res => {
+                if (res.ok) {
+                    let header = res.headers.get('Content-Type');
+                    if (header && header.indexOf('application/json') !== -1)
+                        return res.json();
+                    else
+                        return res.text();
+                }
+                throw 'got one error while fetching ' + url;
+            })
+            .then(finalResult => resolve(finalResult))
+            .catch(err => reject(err))
+    });
+}
+
+function setSectionTimes(times) {
 
     //Notification
     //$('#times-list').append(`<li class="list-group-item data" style="background-color: #88e66f"><a href="#"><b>Abilita Notifiche!</b></a></li>`);
@@ -225,44 +266,44 @@ async function setSectionTimes(times) {
 
                 $('#times-list').append(`<li class="week-divider ${moment(now).isBetween(current_week_start, current_week_end) ? 'week-current' : ''}">
                 ${moment(current_week_start).format('ddd D MMM').toLowerCase()} - ${moment(current_week_end).format('ddd D MMM').toLowerCase()}</li>`);
-              }
+            }
 
-              if (current_day_of_week !== timeItem.date) {
-                  current_day_of_week = timeItem.date;
-                  $('#times-list').append(`<li class="day-divider dark text-center ${old ? 'old-week' : ''}">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
-              }
+            if (current_day_of_week !== timeItem.date) {
+                current_day_of_week = timeItem.date;
+                $('#times-list').append(`<li class="day-divider dark text-center ${old ? 'old-week' : ''}">${moment(timeItem.date).format('ddd D MMM \'YY')}</li>`);
+            }
 
-              var hours = { start: timeItem.timestart.split(':'), end: timeItem.timeend.split(':') }
+            var hours = { start: timeItem.timestart.split(':'), end: timeItem.timeend.split(':') }
 
-              var attributes = '';//(odd % 2 == 0 ? 'dark' : '');
-              attributes += ' ' + (old ? 'old' : '');
-              attributes += ' ' + (moment(now).isBetween(
-                  moment(timeItem.date).startOf('day'),
-                  moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'data-current' : '');
-              attributes += ' ' + (moment(now).isBetween(
-                  moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timestart, 'DDMMYYYYHH:mm:ss'),
-                  moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'blink-bg' : '');
+            var attributes = '';//(odd % 2 == 0 ? 'dark' : '');
+            attributes += ' ' + (old ? 'old' : '');
+            attributes += ' ' + (moment(now).isBetween(
+                moment(timeItem.date).startOf('day'),
+                moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'data-current' : '');
+            attributes += ' ' + (moment(now).isBetween(
+                moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timestart, 'DDMMYYYYHH:mm:ss'),
+                moment(moment(timeItem.date).format('DDMMYYYY') + timeItem.timeend, 'DDMMYYYYHH:mm:ss')) ? 'blink-bg' : '');
 
-              var title = timeItem.moduleName;
-              // var title = null;
-              // if (timeItem.moduleName) {
-              //     var titleTemp = timeItem.moduleName.split(' - ');
-              //     if (titleTemp.length > 1) title = titleTemp.slice(0, -1).join(' - ');
-              //     else title = titleTemp;
-              // }
+            var title = timeItem.moduleName;
+            // var title = null;
+            // if (timeItem.moduleName) {
+            //     var titleTemp = timeItem.moduleName.split(' - ');
+            //     if (titleTemp.length > 1) title = titleTemp.slice(0, -1).join(' - ');
+            //     else title = titleTemp;
+            // }
 
-              /*console.log(current_data_of_day);
-              console.log(timeItem);
-              console.log('\n');
-              if (current_data_of_day)
-                  if (!moment(current_data_of_day.date).isSame(moment(timeItem.date))
-                      || (!moment(current_data_of_day.date).isSame(moment(timeItem.date))
-                          && parseInt(timeItem.timestart.split(':')[0]) < 12)
+            /*console.log(current_data_of_day);
+            console.log(timeItem);
+            console.log('\n');
+            if (current_data_of_day)
+                if (!moment(current_data_of_day.date).isSame(moment(timeItem.date))
+                    || (!moment(current_data_of_day.date).isSame(moment(timeItem.date))
+                        && parseInt(timeItem.timestart.split(':')[0]) < 12)
 
-                  ) { $('#times-list').append(`<li class="list-group-item data"><div class="row"><div class="col">/</div></div></li>`); }
-              */
+                ) { $('#times-list').append(`<li class="list-group-item data"><div class="row"><div class="col">/</div></div></li>`); }
+            */
 
-              var single_item = `<li id="${timeItem.webID ? timeItem.webID : odd}" class="list-group-item data ${attributes}">
+            var single_item = `<li id="${timeItem.webID ? timeItem.webID : odd}" class="list-group-item data ${attributes}">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xs-12 prof-right">
@@ -308,60 +349,95 @@ async function setSectionTimes(times) {
     //$('#times-list').append(`<li class="list-group-item data" style="background-color: #88e66f"><a href="#"><b>Statistiche</b></a></li>`);
 }
 
+function getDataLocal(typeData, course) {
+    let data = localStorage.getItem(course + typeData);
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return data;
+    }
+    //return isString(data) ? data : JSON.parse(data);
+}
+
 async function load() {
     let courseList = await getCourseList();
     //pageToInit();
     if (selected_course !== 'none' && isQueryValid(courseList, selected_course))
-        await showLessons();
+        if (getDataLocal(fetch_links.sectiontimes.ls_label, selected_course))
+            await showLessons();
+        else
+            internal_error('network error');
     else {
         await showHome();
         selected_course = 'none';
+        saveSelectedCourse();
     }
 
-    saveSelectedCourse();
     $('[data-toggle="tooltip"]').tooltip();
 }
 
 async function showLessons() {
     //if (!localStorage.getItem('course')) localStorage.setItem('course', query);
+    loader.show();
+    appBody.empty();
+    appBody.append(`<div id="time-visualizer" class="row">
+                        <div class="col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
+                            <h5 class="course-title">Orari per <b id="course-title"></b></h5>
 
-    $('#info-visualizer').hide();
+                            <div class="last-update"><em>Ultimo aggiornamento: <b id="last-update"></b></em></div>
+
+                            <div class="card table-list">
+                                <ul id="times-list" class="list-group list-group-flush">
+                                    <!--Times Visualization-->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>`);
+    
     generateNavbarList(await getCourseList(), selected_course);
-    await setSectionHeader();
-    await setSectionLastUpdate();
-    let times = await fetchData(fetch_links.sectiontimes, selected_course);
+    setSectionHeader(getDataLocal(fetch_links.sectionheader.ls_label, selected_course));
+    setSectionLastUpdate(getDataLocal(fetch_links.lastupdt.ls_label, selected_course));
+    let times = getDataLocal(fetch_links.sectiontimes.ls_label, selected_course);
 
     if (!times.length) {
         $('#times-list').append('<h5 class="mt-2">Nessun dato</h5>');
     } else {
-        await setSectionTimes(times);
+        setSectionTimes(times);
     }
-    $('#loading').hide();
-    $('.error').hide();
+    footer.show();
+    loader.hide();
 }
 
 async function showHome() {
-    $('#loading').hide();
-    $('.error').hide();
-    $('#btn-expand').hide();
-    $('#course-list').hide();
-    $('#time-visualizer').hide();
-    $('#footer').hide();
+    appBody.empty();
+    appBody.append(`<div id="home-visualizer" class="row">
+                        <div class="col-sm-1 col-md-2 col-lg-3"></div>
+                        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                            <div class="row">
+                                <img src="res/cal-100.png" width="100" height="100" class="ml-auto mr-auto mt-4" alt="itslogo192">
+                                <h3 class="col-12 mt-2">Seleziona un corso</h3>
 
-    $('#info-visualizer').show();
-
-    await setHomeMenu();
+                                <div class="col-12">
+                                    <div id="home-course-list" class="row mt-3">
+                                        <!-- Home List Visualization -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);    
+    mobile_btn.hide();
+    $('#nav-course-list').empty();    
+    footer.hide();
+    await setCourseHomeMenu(await getCourseList());
+    loader.hide();
 }
 
-/* function pageToInit() {
-    $('body > *').not('script').remove();
-    $('body > script:first').before(original_body);
-} */
-
 try {
-    //getCourseList();
     load();
+    if (selected_course !== 'none')
+        updateData(selected_course, true);
 } catch (err) {
-    console.log(err);
-    internal_error('unknown');
+    console.error(err);
+    internal_error(err);
 }
