@@ -30,6 +30,7 @@ var fetch_links = {
 
 async function setSelectedCourse(course) {
     selected_course = course;
+    $('#btn-expand').trigger('click')
     saveSelectedCourse();
     await updateData(selected_course);
     load();
