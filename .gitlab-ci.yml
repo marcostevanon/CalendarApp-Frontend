@@ -16,8 +16,23 @@ before_script:
   - chmod 644 ~/.ssh/known_hosts
 
 # PRODUCTION
+build-prod:
+  stage: build
+  image: node:10
+  before_script:
+    - ''
+  script:
+    - npm install --quiet
+  artifacts:
+    paths:
+      - .
+  only:
+    - master
+
 deploy-prod:
   stage: deploy
+  dependencies:
+    - build-prod
   script:
     - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_PROD"
     - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
@@ -32,8 +47,23 @@ deploy-prod:
     - master
 
 # DEVELOPMENT
+build-dev:
+  stage: build
+  image: node:10
+  before_script:
+    - ''
+  script:
+    - npm install --quiet
+  artifacts:
+    paths:
+      - .
+  only:
+    - dev
+
 deploy-dev:
   stage: deploy
+  dependencies:
+    - build-dev
   script:
     - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_DEV"
     - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
