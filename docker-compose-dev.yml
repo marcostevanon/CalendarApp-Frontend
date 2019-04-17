@@ -1,0 +1,20 @@
+# DEVELOPMENT
+version: "3"
+
+services:
+ dev.calendar.marcostevanon.ovh:
+    container_name: "dev.calendar.marcostevanon.ovh"
+    image: nginx:alpine
+    restart: always
+    labels:
+      - "traefik.frontend.rule=Host:dev.calendar.marcostevanon.ovh"
+      - "traefik.port=80"
+      - "traefik.enable=true"
+    volumes:
+      - .:/usr/share/nginx/html
+    networks:
+      - traefik
+      
+networks:
+  traefik:
+    external: true

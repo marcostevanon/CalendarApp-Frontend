@@ -1,0 +1,61 @@
+stages:
+  - deploy
+  - down
+
+variables:
+  DEPLOY_PATH_PROD: "/home/marco/gitlab-ws/calendar-autodeploy/prod/frontend"
+  DEPLOY_PATH_DEV: "/home/marco/gitlab-ws/calendar-autodeploy/dev/frontend"
+  
+before_script:
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $HOST_NAME >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
+# PRODUCTION
+deploy-prod:
+  stage: deploy
+  script:
+    - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_PROD"
+    - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
+    - scp docker-compose.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
+    - | 
+      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_PROD &&
+        docker-compose -f docker-compose.yml up --build --force-recreate -d"
+  environment:
+    name: production
+    url: https://calendar.marcostevanon.ovh
+  only:
+    - master
+
+# DEVELOPMENT
+deploy-dev:
+  stage: deploy
+  script:
+    - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_DEV"
+    - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
+    - scp docker-compose-dev.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
+    - | 
+      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_DEV &&
+        docker-compose -f docker-compose-dev.yml up --build --force-recreate -d"
+  environment:
+    name: development
+    url: https://dev.calendar.marcostevanon.ovh
+  only:
+    - dev
+
+down-dev:
+  stage: down
+  script:
+   - |
+      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_DEV &&
+        docker-compose -f docker-compose-dev.yml down"
+  environment:
+    name: development
+    action: stop
+  when: manual
+  only:
+   - dev

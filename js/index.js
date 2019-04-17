@@ -1,4 +1,4 @@
-let base_url = 'https://marcostevanon.ovh:1883/';
+let base_url = 'https://api.calendar.marcostevanon.ovh/';
 var now = moment();
 var selected_course = 'none';
 var loader = $('#loading');
