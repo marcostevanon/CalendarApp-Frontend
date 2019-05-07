@@ -13,7 +13,7 @@ before_script:
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
-  - ssh-keyscan $HOST_NAME >> ~/.ssh/known_hosts
+  - ssh-keyscan -P $PORT $HOST_NAME >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
 # PRODUCTION
@@ -35,11 +35,11 @@ deploy-prod:
   dependencies:
     - build-prod
   script:
-    - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_PROD"
-    - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
-    - scp docker-compose.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
+    - ssh $USER_NAME@$HOST_NAME -p $PORT "mkdir -p $DEPLOY_PATH_PROD"
+    - scp -P $PORT -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
+    - scp -P $PORT docker-compose.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
     - | 
-      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_PROD &&
+      ssh $USER_NAME@$HOST_NAME -p $PORT "cd $DEPLOY_PATH_PROD &&
         docker-compose -f docker-compose.yml up --build --force-recreate -d"
   environment:
     name: production
@@ -66,11 +66,11 @@ deploy-dev:
   dependencies:
     - build-dev
   script:
-    - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_DEV"
-    - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
-    - scp docker-compose-dev.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
+    - ssh $USER_NAME@$HOST_NAME -p $PORT "mkdir -p $DEPLOY_PATH_DEV"
+    - scp -P $PORT -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
+    - scp -P $PORT docker-compose-dev.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
     - | 
-      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_DEV &&
+      ssh $USER_NAME@$HOST_NAME -p $PORT "cd $DEPLOY_PATH_DEV &&
         docker-compose -f docker-compose-dev.yml up --build --force-recreate -d"
   environment:
     name: development
@@ -82,7 +82,7 @@ down-dev:
   stage: down
   script:
    - |
-      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_DEV &&
+      ssh $USER_NAME@$HOST_NAME -p $PORT "cd $DEPLOY_PATH_DEV &&
         docker-compose -f docker-compose-dev.yml down"
   environment:
     name: development
