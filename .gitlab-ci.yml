@@ -4,8 +4,8 @@ stages:
   - down
 
 variables:
-  DEPLOY_PATH_PROD: "/home/marco/gitlab-ws/calendar-autodeploy/prod/frontend"
-  DEPLOY_PATH_DEV: "/home/marco/gitlab-ws/calendar-autodeploy/dev/frontend"
+  DEPLOY_PATH: "/home/marco/gitlab-ws/calendar-autodeploy/frontend"
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   
 before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
@@ -13,76 +13,64 @@ before_script:
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
-  - ssh-keyscan $HOST_NAME >> ~/.ssh/known_hosts
+  - ssh-keyscan -p $PORT $HOST_NAME >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
-# PRODUCTION
-build-prod:
+build:
   stage: build
-  image: node:10
+  image: docker
+  services:
+    - docker:dind
   before_script:
     - ''
   script:
-    - npm install --quiet
-  artifacts:
-    paths:
-      - .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $IMAGE_TAG --no-cache .
+    - docker push $IMAGE_TAG
+    - docker rmi $IMAGE_TAG
   only:
     - master
+    - dev
 
 deploy-prod:
   stage: deploy
-  dependencies:
-    - build-prod
   script:
-    - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_PROD"
-    - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
-    - scp docker-compose.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_PROD
+    - ssh $USER_NAME@$HOST_NAME -p $PORT "mkdir -p $DEPLOY_PATH"
+    - scp -P $PORT -rp docker-compose-prod.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH
     - | 
-      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_PROD &&
-        docker-compose -f docker-compose.yml up --build --force-recreate -d"
+      ssh $USER_NAME@$HOST_NAME -p $PORT "cd $DEPLOY_PATH && 
+        docker-compose -f docker-compose-prod.yml up --build --force-recreate -d"
   environment:
     name: production
     url: https://calendar.marcostevanon.ovh
+  when:
+    manual
   only:
     - master
-
-# DEVELOPMENT
-build-dev:
-  stage: build
-  image: node:10
-  before_script:
-    - ''
-  script:
-    - npm install --quiet
-  artifacts:
-    paths:
-      - .
-  only:
-    - dev
 
 deploy-dev:
   stage: deploy
   dependencies:
     - build-dev
   script:
-    - ssh $USER_NAME@$HOST_NAME "mkdir -p $DEPLOY_PATH_DEV"
-    - scp -rp ./* $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
-    - scp docker-compose-dev.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH_DEV
-    - | 
-      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_DEV &&
+    - ssh $USER_NAME@$HOST_NAME -p $PORT "mkdir -p $DEPLOY_PATH"
+    - scp -P $PORT -rp docker-compose-dev.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH
+    - |
+      ssh $USER_NAME@$HOST_NAME -p $PORT "cd $DEPLOY_PATH &&
         docker-compose -f docker-compose-dev.yml up --build --force-recreate -d"
   environment:
     name: development
     url: https://dev.calendar.marcostevanon.ovh
+    on_stop: 
+      down-dev
   only:
     - dev
 
 down-dev:
   stage: down
   script:
-   - |
-      ssh $USER_NAME@$HOST_NAME "cd $DEPLOY_PATH_DEV &&
+    - |
+      ssh $USER_NAME@$HOST_NAME -p $PORT "cd $DEPLOY_PATH &&
         docker-compose -f docker-compose-dev.yml down"
   environment:
     name: development
