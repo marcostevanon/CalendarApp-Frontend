@@ -10,8 +10,6 @@ services:
       - "traefik.frontend.rule=Host:dev.calendar.marcostevanon.ovh"
       - "traefik.port=80"
       - "traefik.enable=true"
-    volumes:
-      - .:/usr/share/nginx/html
     networks:
       - traefik
       
