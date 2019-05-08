@@ -5,5 +5,5 @@ RUN npm i
 COPY . .
 
 FROM nginx:alpine
-WORKDIR /home/app
-COPY --from=build-env /out /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+COPY --from=build-env /out .
