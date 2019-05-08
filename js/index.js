@@ -1,5 +1,5 @@
 let base_url = '';
-if (window.location.href.split('.')[0].split('/')[2])
+if (window.location.href.split('.')[0].split('/')[2] == 'dev')
     base_url = 'https://dev.api.calendar.marcostevanon.ovh/';
 else
     base_url = 'https://api.calendar.marcostevanon.ovh/';
