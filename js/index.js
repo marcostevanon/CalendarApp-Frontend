@@ -1,4 +1,9 @@
-let base_url = 'https://api.calendar.marcostevanon.ovh/';
+let base_url = '';
+if (window.location.href.split('.')[0].split('/')[2])
+    base_url = 'https://dev.api.calendar.marcostevanon.ovh/';
+else
+    base_url = 'https://api.calendar.marcostevanon.ovh/';
+
 var now = moment();
 var selected_course = 'none';
 var loader = $('#loading');
@@ -23,7 +28,7 @@ var fetch_links = {
         ls_label: 'stm'
     },
     sectionheader: {
-        url: () =>  `${base_url}course/${selected_course}`,
+        url: () => `${base_url}course/${selected_course}`,
         ls_label: 'shd'
     }
 }
@@ -59,7 +64,7 @@ function internal_error(err = '') {
                             clicca <b>Vai alla Home</b> per tornare ad utilizzare l\'app
                         </div>
                     </div>`);
-    
+
     $('#error-message').text('Error: ' + err);
     loader.hide();
     throw "network error";
@@ -82,7 +87,7 @@ async function getCourseList() {
         .then(result => result)
         .catch((err) => {
             console.log('Error: ' + err);
-            throw 'network error';            
+            throw 'network error';
         });
     localStorage.setItem('course-list', JSON.stringify(course_list));
     return course_list;
@@ -395,7 +400,7 @@ async function showLessons() {
                             </div>
                         </div>
                     </div>`);
-    
+
     generateNavbarList(await getCourseList(), selected_course);
     setSectionHeader(getDataLocal(fetch_links.sectionheader.ls_label, selected_course));
     setSectionLastUpdate(getDataLocal(fetch_links.lastupdt.ls_label, selected_course));
@@ -426,9 +431,9 @@ async function showHome() {
                                 </div>
                             </div>
                         </div>
-                    </div>`);    
+                    </div>`);
     mobile_btn.hide();
-    $('#nav-course-list').empty();    
+    $('#nav-course-list').empty();
     footer.hide();
     await setCourseHomeMenu(await getCourseList());
     loader.hide();
