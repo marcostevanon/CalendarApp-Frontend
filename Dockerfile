@@ -7,3 +7,4 @@ COPY . .
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 COPY --from=build-env /out .
+EXPOSE 80
