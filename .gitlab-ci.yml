@@ -50,8 +50,6 @@ deploy-prod:
 
 deploy-dev:
   stage: deploy
-  dependencies:
-    - build-dev
   script:
     - ssh $USER_NAME@$HOST_NAME -p $PORT "mkdir -p $DEPLOY_PATH"
     - scp -P $PORT -rp docker-compose-dev.yml $USER_NAME@$HOST_NAME:$DEPLOY_PATH
