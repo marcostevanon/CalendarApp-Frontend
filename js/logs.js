@@ -1,4 +1,4 @@
-fetch(`https://marcostevanon.ovh:1883/log`)
+fetch(`https://api.calendar.marcostevanon.ovh/log`)
     .then(res => res.json())
     .then(res => {
         res.forEach(item => {
@@ -14,7 +14,7 @@ fetch(`https://marcostevanon.ovh:1883/log`)
         });
     });
 
-fetch(`https://marcostevanon.ovh:1883/mail`)
+fetch(`https://api.calendar.marcostevanon.ovh/mail`)
     .then(res => res.json())
     .then(res => {
         res.forEach(item => {
